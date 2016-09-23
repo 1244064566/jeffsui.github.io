@@ -1,0 +1,805 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>pinghailinfeng&#39;s blog</title>
+  <subtitle>pinghailinfeng&#39;s blog</subtitle>
+  <link href="/atom.xml" rel="self"/>
+  
+  <link href="http://jeffsui.github.io/"/>
+  <updated>2016-09-23T00:47:08.464Z</updated>
+  <id>http://jeffsui.github.io/</id>
+  
+  <author>
+    <name>Jeff Sui</name>
+    <email>pinghailinfeng79@gmail.com</email>
+  </author>
+  
+  <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>how git changing author info</title>
+    <link href="http://jeffsui.github.io/2016/09/22/how-git-changing-author-info/"/>
+    <id>http://jeffsui.github.io/2016/09/22/how-git-changing-author-info/</id>
+    <published>2016-09-22T08:39:05.000Z</published>
+    <updated>2016-09-23T00:47:08.464Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="how-git-changing-author-info"><a href="#how-git-changing-author-info" class="headerlink" title="how git changing author info"></a>how git changing author info</h1><h2 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h2><ol>
+<li><code>gitlab</code>中的统计视图是根据用户的信息统计工作量 </li>
+<li>迁移git repo中经常会遇到用户和邮箱不一致的情况</li>
+</ol>
+<h2 id="解决思路"><a href="#解决思路" class="headerlink" title="解决思路"></a>解决思路</h2><p>那么如何修改已经推送到远程的author信息呢?</p>
+<p> <code>github</code> 官方提供的建议<a href="https://help.github.com/articles/changing-author-info/" target="_blank" rel="external">如何变更用户信息</a></p>
+<p>同时也有类似的项托管在<code>github</code>上，<a href="https://github.com/jayphelps/git-blame-someone-else" target="_blank" rel="external">git-tips-blame-someone-else</a></p>
+<p>思路基本一致,就是替换提交记录、分支、标签里的author信息。</p>
+<h2 id="方案"><a href="#方案" class="headerlink" title="方案"></a>方案</h2><h3 id="1-打开终端或命令行-git-bash"><a href="#1-打开终端或命令行-git-bash" class="headerlink" title="1.打开终端或命令行(git bash)"></a>1.打开终端或命令行(<code>git bash</code>)</h3><h3 id="2-创建一个你项目的全新裸库"><a href="#2-创建一个你项目的全新裸库" class="headerlink" title="2.创建一个你项目的全新裸库"></a>2.创建一个你项目的全新裸库</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">git clone --bare https://github.com/user/repo.git</div><div class="line">cd repo.git</div></pre></td></tr></table></figure>
+<h3 id="3-复制粘贴脚本-并根据你的信息修改下面的变量"><a href="#3-复制粘贴脚本-并根据你的信息修改下面的变量" class="headerlink" title="3.复制粘贴脚本,并根据你的信息修改下面的变量:"></a>3.复制粘贴脚本,并根据你的信息修改下面的变量:</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">OLD_EMAIL</div><div class="line">CORRECT_NAME</div><div class="line">CORRECT_EMAIL</div></pre></td></tr></table></figure>
+<p>脚本<code>replace.sh</code><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div></pre></td><td class="code"><pre><div class="line">#!/bin/sh</div><div class="line"></div><div class="line">git filter-branch --env-filter &apos;</div><div class="line"></div><div class="line">OLD_EMAIL=&quot;your-old-email@example.com&quot;</div><div class="line">CORRECT_NAME=&quot;Your Correct Name&quot;</div><div class="line">CORRECT_EMAIL=&quot;your-correct-email@example.com&quot;</div><div class="line"></div><div class="line">if [ &quot;$GIT_COMMITTER_EMAIL&quot; = &quot;$OLD_EMAIL&quot; ]</div><div class="line">then</div><div class="line">    export GIT_COMMITTER_NAME=&quot;$CORRECT_NAME&quot;</div><div class="line">    export GIT_COMMITTER_EMAIL=&quot;$CORRECT_EMAIL&quot;</div><div class="line">fi</div><div class="line">if [ &quot;$GIT_AUTHOR_EMAIL&quot; = &quot;$OLD_EMAIL&quot; ]</div><div class="line">then</div><div class="line">    export GIT_AUTHOR_NAME=&quot;$CORRECT_NAME&quot;</div><div class="line">    export GIT_AUTHOR_EMAIL=&quot;$CORRECT_EMAIL&quot;</div><div class="line">fi</div><div class="line">&apos; --tag-name-filter cat -- --branches --tags</div></pre></td></tr></table></figure></p>
+<h3 id="4-执行这个脚本"><a href="#4-执行这个脚本" class="headerlink" title="4.执行这个脚本"></a>4.执行这个脚本</h3><p><code>sh replace.sh</code></p>
+<h3 id="5-察看Git历史有没有错误"><a href="#5-察看Git历史有没有错误" class="headerlink" title="5.察看Git历史有没有错误"></a>5.察看Git历史有没有错误</h3><p><code>git log</code></p>
+<h3 id="6-强制推送到远程"><a href="#6-强制推送到远程" class="headerlink" title="6.强制推送到远程"></a>6.强制推送到远程</h3><p><code>git push --force --tags origin &#39;refs/heads/*&#39;</code></p>
+<h3 id="7-清除repo-git仓库"><a href="#7-清除repo-git仓库" class="headerlink" title="7.清除repo.git仓库"></a>7.清除repo.git仓库</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd ..</div><div class="line">rm -rf repo.git</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;how-git-changing-author-info&quot;&gt;&lt;a href=&quot;#how-git-changing-author-info&quot; class=&quot;headerlink&quot; title=&quot;how git changing author info&quot;&gt;&lt;/a&gt;ho
+    
+    </summary>
+    
+      <category term="git" scheme="http://jeffsui.github.io/categories/git/"/>
+    
+    
+      <category term="git" scheme="http://jeffsui.github.io/tags/git/"/>
+    
+      <category term="github" scheme="http://jeffsui.github.io/tags/github/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>how to understand git detached HEAD</title>
+    <link href="http://jeffsui.github.io/2016/08/08/how-to-understand-git-detached-HEAD/"/>
+    <id>http://jeffsui.github.io/2016/08/08/how-to-understand-git-detached-HEAD/</id>
+    <published>2016-08-08T05:30:53.000Z</published>
+    <updated>2016-09-20T06:17:24.996Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h1><p>远程有一个develop分支，我想获取到本地,但是clone该项目的时候这个远程分支还没有创建,于是执行 <code>git checkout commit_id(develop)</code> 提示如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">$ git checkout f7c774b</div><div class="line">Checking out files: 100% (357/357), done.</div><div class="line">Note: checking out &apos;f7c774b&apos;.</div><div class="line"></div><div class="line">You are in &apos;detached HEAD&apos; state. You can look around, make experimental</div><div class="line">changes and commit them, and you can discard any commits you make in this</div><div class="line">state without impacting any branches by performing another checkout.</div><div class="line"></div><div class="line">If you want to create a new branch to retain commits you create, you may</div><div class="line">do so (now or later) by using -b with the checkout command again. Example:</div><div class="line"></div><div class="line">  git checkout -b new_branch_name</div><div class="line"></div><div class="line">HEAD is now at f7c774b... update jeffsui.github.io</div></pre></td></tr></table></figure>
+<h2 id="出现-detached-from"><a href="#出现-detached-from" class="headerlink" title="出现 detached from ..."></a>出现 <code>detached from ...</code></h2><p>此时用<code>git branch -av</code>察看分支<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">$ git branch -av</div><div class="line">* (detached from f7c774b) f7c774b update jeffsui.github.io</div><div class="line">  master                  6ce1857 Site updated: 2016-08-07 22:09:10</div><div class="line">  remotes/origin/HEAD     -&gt; origin/master</div><div class="line">  remotes/origin/develop  f7c774b update jeffsui.github.io</div><div class="line">  remotes/origin/gh-pages 1eee93f Site updated: 2016-02-13 21:03:46</div><div class="line">  remotes/origin/master   6ce1857 Site updated: 2016-08-07 22:09:10</div></pre></td></tr></table></figure></p>
+<p>所谓的 <code>detached HEAD</code> 其实就是<code>HEAD</code>指向的是一个<code>commit</code>而不指向任何一个<code>branch</code>的临时分支,翻译过来就是<code>游离</code>.</p>
+<p>众所周知,每一个分支都对应了一个commit,<code>git checkout</code>其实就是修改<code>HEAD</code>文件内容,让它指向不同的分支.</p>
+<h2 id="如何让detached-HEAD所处分支指向远程分支"><a href="#如何让detached-HEAD所处分支指向远程分支" class="headerlink" title="如何让detached HEAD所处分支指向远程分支"></a>如何让<code>detached HEAD</code>所处分支指向远程分支</h2><p>此时的分支你可以执行<code>commit</code>操作,但是无法<code>push</code>到远程分支。<br>那么我们如何把游离状态的分支指向我们指定的远程分支呢。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">$ git fetch origin develop:develop</div><div class="line">From https://github.com/jeffsui/jeffsui.github.io</div><div class="line"> * [new branch]      develop    -&gt; develop</div></pre></td></tr></table></figure></p>
+<p>继续执行<code>git branch -av</code> 命令查看分支</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">$ git branch -av</div><div class="line">* (detached from f7c774b) f7c774b update jeffsui.github.io</div><div class="line">  develop                 f7c774b update jeffsui.github.io</div><div class="line">  master                  6ce1857 Site updated: 2016-08-07 22:09:10</div><div class="line">  remotes/origin/HEAD     -&gt; origin/master</div><div class="line">  remotes/origin/develop  f7c774b update jeffsui.github.io</div><div class="line">  remotes/origin/gh-pages 1eee93f Site updated: 2016-02-13 21:03:46</div><div class="line">  remotes/origin/master   6ce1857 Site updated: 2016-08-07 22:09:10</div></pre></td></tr></table></figure>
+<p>此时我们发现多了一个<code>develop</code>分支指向了远程<code>develop</code> 分支，这样我们就可以通过命令<code>git push origin develop:develop</code>到远程分支了。</p>
+<h2 id="更简洁的方法"><a href="#更简洁的方法" class="headerlink" title="更简洁的方法"></a>更简洁的方法</h2><p><code>git fetch origin develop:develop</code> </p>
+<p>or </p>
+<p><code>git checkount -b origin develop:develop</code> 这样可以直接获取远程分支并创建一个本地分支。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;场景&quot;&gt;&lt;a href=&quot;#场景&quot; class=&quot;headerlink&quot; title=&quot;场景&quot;&gt;&lt;/a&gt;场景&lt;/h1&gt;&lt;p&gt;远程有一个develop分支，我想获取到本地,但是clone该项目的时候这个远程分支还没有创建,于是执行 &lt;code&gt;git checkou
+    
+    </summary>
+    
+    
+      <category term="git" scheme="http://jeffsui.github.io/tags/git/"/>
+    
+      <category term="版本管理" scheme="http://jeffsui.github.io/tags/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>my-angle</title>
+    <link href="http://jeffsui.github.io/2016/02/15/my-angle/"/>
+    <id>http://jeffsui.github.io/2016/02/15/my-angle/</id>
+    <published>2016-02-15T13:27:07.000Z</published>
+    <updated>2016-09-20T06:17:25.017Z</updated>
+    
+    <content type="html"><![CDATA[<ul>
+<li><img src="http://7xindo.com1.z0.glb.clouddn.com/photoIMG_20160210_132300.jpg" alt=""></li>
+<li><img src="http://7xindo.com1.z0.glb.clouddn.com/photoIMG_20160210_132850.jpg" alt=""></li>
+<li><img src="http://7xindo.com1.z0.glb.clouddn.com/photoIMG_20160210_132209.jpg" alt=""></li>
+<li><img src="http://7xindo.com1.z0.glb.clouddn.com/photoIMG_20160210_132106.jpg" alt=""></li>
+<li><img src="http://7xindo.com1.z0.glb.clouddn.com/photoIMG_20160210_131838.jpg" alt=""></li>
+<li><img src="http://7xindo.com1.z0.glb.clouddn.com/photoIMG_20160210_131523.jpg" alt=""></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;ul&gt;
+&lt;li&gt;&lt;img src=&quot;http://7xindo.com1.z0.glb.clouddn.com/photoIMG_20160210_132300.jpg&quot; alt=&quot;&quot;&gt;&lt;/li&gt;
+&lt;li&gt;&lt;img src=&quot;http://7xindo.com1.z0.glb.
+    
+    </summary>
+    
+    
+      <category term="photo" scheme="http://jeffsui.github.io/tags/photo/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>windows-mongodb-install</title>
+    <link href="http://jeffsui.github.io/2016/02/13/windows-mongodb-install/"/>
+    <id>http://jeffsui.github.io/2016/02/13/windows-mongodb-install/</id>
+    <published>2016-02-13T11:27:09.000Z</published>
+    <updated>2016-09-20T06:17:25.045Z</updated>
+    
+    <content type="html"><![CDATA[<p>#windows下mongodb安装</p>
+<p>##下载mongodb</p>
+<p><a href="http://www.mongodb.org/downloads" target="_blank" rel="external">http://www.mongodb.org/downloads</a></p>
+<p>##选择自定义安装</p>
+<p>本机路径为:<code>d:\tools\mongodb</code></p>
+<p>##建立如下文件目录<br>数据库路径:<code>d:\tools\mongodb\db</code><br>日志路径:<code>d:\tools\mongodb\log</code><br>配置文件目录<code>d:\tools\mongodb\etc</code><br>建立配置文件<code>d:\tools\mongodb\etc\mongodb.conf</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">dbpath=d:\tools\mongodb\db #数据库路径</div><div class="line">logpath=d:\tools\mongodb\log\mongodb.log #日志输出文件路径</div><div class="line">logappend=true #错误日志采用追加模式，配置这个选项后mongodb的日志会追加到现有的日志文件，而不是从新创建一个新文件</div><div class="line">journal=true #启用日志文件，默认启用</div><div class="line">quiet=true #这个选项可以过滤掉一些无用的日志信息，若需要调试使用请设置为false</div><div class="line">port=27017 #端口号 默认为27017</div></pre></td></tr></table></figure>
+<p>##启动服务</p>
+<p>切换到<code>d:\tools\mongodb\bin</code> 目录下:</p>
+<ul>
+<li>普通启动</li>
+</ul>
+<p><code>mongod --config d:\tools\mongodb\etc\mongodb.conf</code></p>
+<ul>
+<li>注册为windows服务</li>
+</ul>
+<p><code>mongod --config d:\tools\mongodb\etc\mongodb.conf --install</code></p>
+<p><strong>补充</strong> </p>
+<ul>
+<li>windows服务卸载</li>
+</ul>
+<p><code>mongod --remove --serviceName &quot;MongoDB&quot;</code></p>
+<ul>
+<li>启动服务<br><code>net start mongodb</code></li>
+</ul>
+<p>启动成功后,通过浏览器访问 <code>http://localhost:27017</code> ,看到下面的文字,证明启动服务成功！</p>
+<blockquote>
+<p>It looks like you are trying to access MongoDB over HTTP on the native driver port.</p>
+</blockquote>
+<ul>
+<li>关闭服务<br><code>net stop mongodb</code> </li>
+</ul>
+<p>#图形化工具</p>
+<p>官方提供的很全:<a href="https://docs.mongodb.org/ecosystem/tools/administration-interfaces/" target="_blank" rel="external">https://docs.mongodb.org/ecosystem/tools/administration-interfaces/</a></p>
+<ul>
+<li><p><a href="http://www.npmjs.org/package/mongo-express" target="_blank" rel="external">mongo express </a> –Nodejs</p>
+</li>
+<li><p><a href="http://mongobooster.com" target="_blank" rel="external">MongoBooster </a></p>
+</li>
+<li><p><a href="http://edgytech.com/umongo/" target="_blank" rel="external">UMongo </a></p>
+</li>
+<li><p><a href="https://github.com/fotonauts/MongoHub-Mac" target="_blank" rel="external">MongoHub </a></p>
+</li>
+<li><p><a href="http://blog.mongovue.com/" target="_blank" rel="external">MongoVUE</a> –.NET </p>
+</li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;#windows下mongodb安装&lt;/p&gt;
+&lt;p&gt;##下载mongodb&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;http://www.mongodb.org/downloads&quot; target=&quot;_blank&quot; rel=&quot;external&quot;&gt;http://www.mongodb
+    
+    </summary>
+    
+      <category term="db" scheme="http://jeffsui.github.io/categories/db/"/>
+    
+    
+      <category term="mongodb" scheme="http://jeffsui.github.io/tags/mongodb/"/>
+    
+      <category term="windows" scheme="http://jeffsui.github.io/tags/windows/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>maven3-jdk1.7-problem-fixed</title>
+    <link href="http://jeffsui.github.io/2016/02/13/maven3-jdk1-7-problem-fixed/"/>
+    <id>http://jeffsui.github.io/2016/02/13/maven3-jdk1-7-problem-fixed/</id>
+    <published>2016-02-13T08:24:25.000Z</published>
+    <updated>2016-09-20T06:17:25.013Z</updated>
+    
+    <content type="html"><![CDATA[<p>#maven3下jdk1.7编译错误解决</p>
+<p>#环境<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">Apache Maven 3.3.3 (7994120775791599e205a5524ec3e0dfe41d4a06; 2015-04-22T19:57:3</div><div class="line">7+08:00)</div><div class="line">Maven home: d:\tools\apache-maven-3.3.3</div><div class="line">Java version: 1.7.0_45, vendor: Oracle Corporation</div><div class="line">Java home: c:\Program Files\Java\jdk1.7.0_45\jre</div><div class="line">Default locale: zh_CN, platform encoding: GBK</div><div class="line">OS name: &quot;windows 7&quot;, version: &quot;6.1&quot;, arch: &quot;amd64&quot;, family: &quot;windows&quot;</div></pre></td></tr></table></figure></p>
+<p>#使用<code>maven</code>命令行创建java项目<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">mvn archetype:generate -DgroupId=org.linfeng -DartifactId=mavendemo -DarchetypeArtifactId=maven-archetype-quickstart -DinteractiveMode=false</div></pre></td></tr></table></figure></p>
+<ul>
+<li>创建成功</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">$ cd mavendemo &amp;&amp; ls</div><div class="line">pom.xml  src</div></pre></td></tr></table></figure>
+<ul>
+<li>pom.xml</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;</div><div class="line">  xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd&quot;&gt;</div><div class="line">  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;</div><div class="line">  &lt;groupId&gt;org.linfeng&lt;/groupId&gt;</div><div class="line">  &lt;artifactId&gt;mavendemo&lt;/artifactId&gt;</div><div class="line">  &lt;packaging&gt;jar&lt;/packaging&gt;</div><div class="line">  &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;</div><div class="line">  &lt;name&gt;mavendemo&lt;/name&gt;</div><div class="line">  &lt;url&gt;http://maven.apache.org&lt;/url&gt;</div><div class="line">  &lt;dependencies&gt;</div><div class="line">    &lt;dependency&gt;</div><div class="line">      &lt;groupId&gt;junit&lt;/groupId&gt;</div><div class="line">      &lt;artifactId&gt;junit&lt;/artifactId&gt;</div><div class="line">      &lt;version&gt;3.8.1&lt;/version&gt;</div><div class="line">      &lt;scope&gt;test&lt;/scope&gt;</div><div class="line">    &lt;/dependency&gt;</div><div class="line">  &lt;/dependencies&gt;</div><div class="line">&lt;/project&gt;</div></pre></td></tr></table></figure>
+<ul>
+<li>执行maven命令</li>
+</ul>
+<p><code>mvn test</code></p>
+<ul>
+<li>错误信息</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.1:compile (default-compile) on project mavendemo: Compilation failure</div><div class="line">[ERROR] No compiler is provided in this environment. Perhaps you are running on a JRE rather than a JDK?</div></pre></td></tr></table></figure>
+<p>#解决方案</p>
+<ul>
+<li>修改<code>settings.xml</code>,添加jdk1.7相关内容</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">&lt;profile&gt;</div><div class="line">    &lt;id&gt;jdk-1.7&lt;/id&gt;</div><div class="line">    &lt;activation&gt;</div><div class="line">        &lt;activeByDefault&gt;true&lt;/activeByDefault&gt;</div><div class="line">        &lt;jdk&gt;1.7&lt;/jdk&gt;</div><div class="line">    &lt;/activation&gt;</div><div class="line">    &lt;properties&gt;</div><div class="line">        &lt;maven.compiler.source&gt;1.7&lt;/maven.compiler.source&gt;</div><div class="line">        &lt;maven.compiler.target&gt;1.7&lt;/maven.compiler.target&gt;</div><div class="line">        &lt;maven.compiler.compilerVersion&gt;1.7&lt;/maven.compiler.compilerVersion&gt;</div><div class="line">    &lt;/properties&gt;</div><div class="line">&lt;/profile&gt;</div></pre></td></tr></table></figure>
+<p><em>缺点</em>:修改所有项目的jre环境</p>
+<ul>
+<li>修改当前项目的<code>pom.xml</code></li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line">&lt;build&gt;</div><div class="line">    &lt;plugins&gt;</div><div class="line">      &lt;plugin&gt;</div><div class="line">        &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</div><div class="line">        &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;</div><div class="line">        &lt;version&gt;3.1&lt;/version&gt;</div><div class="line">        &lt;configuration&gt;</div><div class="line">          &lt;source&gt;1.7&lt;/source&gt;</div><div class="line">          &lt;target&gt;1.7&lt;/target&gt;</div><div class="line">        &lt;/configuration&gt;</div><div class="line">      &lt;/plugin&gt;</div><div class="line">    &lt;/plugins&gt;</div><div class="line">&lt;/build&gt;</div></pre></td></tr></table></figure>
+<p>重新执行<code>mvn build</code> 成功！</p>
+<p>#问题分析<br>Maven官方文档有如下描述：</p>
+<blockquote>
+<p>编译器插件用来编译项目的源文件.从3.0版本开始, 用来编译Java源文件的默认编译器是javax.tools.JavaCompiler (如果你是用的是java 1.6) . 如果你想强制性的让插件使用javac,你必须配置插件选项 forceJavacCompilerUse.<br>同时需要注意的是目前source选项和target 选项的默认设置都是1.5, 与运行Maven时的JDK版本无关.如果你想要改变这些默认设置, 可以参考 Setting the -source and -target of the Java Compiler中的描述来设置 source 和target 选项.</p>
+</blockquote>
+<p>#参考资料</p>
+<ul>
+<li><a href="http://stackoverflow.com/questions/15220392/maven-package-compilation-error" target="_blank" rel="external">http://stackoverflow.com/questions/15220392/maven-package-compilation-error</a></li>
+<li><a href="http://www.cnblogs.com/leo100w/p/4017647.html" target="_blank" rel="external">http://www.cnblogs.com/leo100w/p/4017647.html</a></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;#maven3下jdk1.7编译错误解决&lt;/p&gt;
+&lt;p&gt;#环境&lt;br&gt;&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class
+    
+    </summary>
+    
+      <category term="ci" scheme="http://jeffsui.github.io/categories/ci/"/>
+    
+    
+      <category term="jdk" scheme="http://jeffsui.github.io/tags/jdk/"/>
+    
+      <category term="maven" scheme="http://jeffsui.github.io/tags/maven/"/>
+    
+      <category term="持续集成" scheme="http://jeffsui.github.io/tags/%E6%8C%81%E7%BB%AD%E9%9B%86%E6%88%90/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>how make cygwin multi-color</title>
+    <link href="http://jeffsui.github.io/2015/08/12/how-make-cygwin-multi-color/"/>
+    <id>http://jeffsui.github.io/2015/08/12/how-make-cygwin-multi-color/</id>
+    <published>2015-08-11T22:16:59.000Z</published>
+    <updated>2016-09-20T06:17:24.972Z</updated>
+    
+    <content type="html"><![CDATA[<ul>
+<li>打开.bashrc</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"># Default to human readable figures</div><div class="line"># alias df=&apos;df -h&apos;</div><div class="line"># alias du=&apos;du -h&apos;</div><div class="line">#</div><div class="line"># Misc  </div><div class="line"># alias less=&apos;less -r&apos;                          # raw control characters</div><div class="line"># alias whence=&apos;type -a&apos;                        # where, of a sort</div><div class="line"># alias grep=&apos;grep --color&apos;                     # show differences in colour</div><div class="line"># alias egrep=&apos;egrep --color=auto&apos;              # show differences in colour</div><div class="line"># alias fgrep=&apos;fgrep --color=auto&apos;              # show differences in colour</div><div class="line">#</div><div class="line"># Some shortcuts for different directory listings</div><div class="line"># alias ls=&apos;ls -hF --color=tty&apos;                 # classify files in colour</div><div class="line"># alias dir=&apos;ls --color=auto --format=vertical&apos;</div><div class="line"># alias vdir=&apos;ls --color=auto --format=long&apos;</div><div class="line"># alias ll=&apos;ls -l&apos;                              # long list</div><div class="line"># alias la=&apos;ls -A&apos;                              # all but . and ..</div><div class="line"># alias l=&apos;ls -CF&apos;                              #</div></pre></td></tr></table></figure>
+<ul>
+<li>而我们要做的只是去掉#，启动即可：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"># Default to human readable figures</div><div class="line">alias df=&apos;df -h&apos;</div><div class="line">alias du=&apos;du -h&apos;</div><div class="line">#</div><div class="line"># Misc  </div><div class="line">alias less=&apos;less -r&apos;                          # raw control characters</div><div class="line">alias whence=&apos;type -a&apos;                        # where, of a sort</div><div class="line">alias grep=&apos;grep --color&apos;                     # show differences in colour</div><div class="line">alias egrep=&apos;egrep --color=auto&apos;              # show differences in colour</div><div class="line">alias fgrep=&apos;fgrep --color=auto&apos;              # show differences in colour</div><div class="line">#</div><div class="line"># Some shortcuts for different directory listings</div><div class="line">alias ls=&apos;ls -hF --color=tty&apos;                 # classify files in colour</div><div class="line">alias dir=&apos;ls --color=auto --format=vertical&apos;</div><div class="line">alias vdir=&apos;ls --color=auto --format=long&apos;</div><div class="line">alias ll=&apos;ls -l&apos;                              # long list</div><div class="line">alias la=&apos;ls -A&apos;                              # all but . and ..</div><div class="line">alias l=&apos;ls -CF&apos;                              #</div></pre></td></tr></table></figure>
+<ul>
+<li>然后保存一下，再重启cygwin<br>（或者直接用：<code>source ~/.bashrc</code></li>
+</ul>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;ul&gt;
+&lt;li&gt;打开.bashrc&lt;/li&gt;
+&lt;/ul&gt;
+&lt;figure class=&quot;highlight plain&quot;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&quot;gutter&quot;&gt;&lt;pre&gt;&lt;div class=&quot;line&quot;&gt;1&lt;/div&gt;&lt;div class=&quot;line&quot;&gt;
+    
+    </summary>
+    
+      <category term="linux" scheme="http://jeffsui.github.io/categories/linux/"/>
+    
+    
+      <category term="cygwin" scheme="http://jeffsui.github.io/tags/cygwin/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>how to build a private docker registry</title>
+    <link href="http://jeffsui.github.io/2015/07/21/how-to-build-a-private-docker-registry/"/>
+    <id>http://jeffsui.github.io/2015/07/21/how-to-build-a-private-docker-registry/</id>
+    <published>2015-07-21T15:09:19.000Z</published>
+    <updated>2016-09-20T06:17:24.976Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="如何搭建docker私服"><a href="#如何搭建docker私服" class="headerlink" title="如何搭建docker私服"></a>如何搭建docker私服</h1><p>##环境准备</p>
+<p>软件包：</p>
+<ul>
+<li><p>centos6.5_x86_64</p>
+</li>
+<li><p>docker-engine-1.7.0-1.el6.x86_64.rpm</p>
+</li>
+</ul>
+<p>docker环境搭建,请参照官方说明，本文采用的是官方的rpm包</p>
+<p>##何谓私服</p>
+<p>官方的image镜像站位dockerhub,因为伟大的墙的缘故,所以下载镜像是很痛苦的一件事。当然你可以采用其他科学上网或者镜像加速的方法来获取image。<br>docker官方也提供了一个私服镜像,大家可以通过<code>docker search registry</code>来查找该镜像。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">NAME                                     DESCRIPTION                                     STARS     OFFICIAL   AUTOMATED</div><div class="line">registry                                 Containerized docker registry                   320       [OK]       </div><div class="line">atcol/docker-registry-ui                 A web UI for easy private/local Docker Reg...   55                   [OK]</div><div class="line">konradkleine/docker-registry-frontend    Browse and modify your Docker registry in ...   40                   [OK]</div><div class="line">samalba/docker-registry                                                                  35</div></pre></td></tr></table></figure>
+<p>##下载官方registry镜像</p>
+<ul>
+<li>下载镜像</li>
+</ul>
+<p>使用命令<code>docker pull registry</code>执行下载镜像。</p>
+<ul>
+<li>查看镜像</li>
+</ul>
+<p>下载完毕后,通过<code>docker images</code> 查看该镜像。</p>
+<ul>
+<li>给镜像打标签</li>
+</ul>
+<p>执行这个命令<br><code>docker tag registry:latest localhost:5000/registry:latest</code></p>
+<p>##启动镜像 </p>
+<p><code>docker run -d -e SETTINGS_FLAVOR=dev -e STORAGE_PATH=/tmp/registry -v /opt/data/registry:/tmp/registry  -p 5000:5000 registry</code></p>
+<p>这里有几个参数说明下:</p>
+<ul>
+<li>1.<code>-e STORAGE_PATH=/tmp/registry</code> :强制使用存储路径</li>
+<li>2.<code>-v /opt/data/registry:/tmp/registry</code> :绑定本地镜像存储路径</li>
+<li>3.<code>-p 5000:5000</code>:映射容器5000端口到本地5000端口</li>
+</ul>
+<p>##查看镜像状态</p>
+<p><code>docker ps</code></p>
+<p>##查看私服状态</p>
+<p><code>curl http://localhost:5000</code></p>
+<p>显示如下信息,证明registry启动成功:</p>
+<p><code>&quot;\&quot;docker-registry server\&quot;&quot;</code></p>
+<p>##推送本地镜像库到registry私服</p>
+<p>###1. 第一步 给本地镜像 打tag<br>例如给官方的nginx镜像打tag,执行下面的命令行<br><code>docker pull nginx</code><br><code>docker tag nginx:latest localhost:5000/nginx:latest</code><br>查看镜像库,发现<code>localhost:5000/nginx</code>的镜像已经有了。</p>
+<p>###2. 第二步 推送tag到registry私服</p>
+<p><code>docker push localhost:5000/nginx:latest</code></p>
+<p>###3. 第三步 查看私服镜像列表</p>
+<p><code>curl http://localhost：5000/V1/search</code></p>
+<p>看到类似这样的信息</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">&#123;&quot;num_results&quot;: 5, &quot;query&quot;: &quot;&quot;, &quot;results&quot;: [&#123;&quot;description&quot;: null, &quot;name&quot;: &quot;correl/erlang&quot;&#125;, &#123;&quot;description&quot;: null, &quot;name&quot;: &quot;linfeng/cmd&quot;&#125;, &#123;&quot;description&quot;: null, &quot;name&quot;: &quot;library/my_nodejs_image&quot;&#125;, &#123;&quot;description&quot;: null, &quot;name&quot;: &quot;library/centos&quot;&#125;, &#123;&quot;description&quot;: &quot;&quot;, &quot;name&quot;: &quot;library/nginx&quot;&#125;]&#125;</div></pre></td></tr></table></figure>
+<p>##拉取私服镜像</p>
+<p><code>docker pull 192.168.20.85:5000/library/centos:7</code></p>
+<p>##结论</p>
+<p>这只是演示如何搭建一个简单的registry私服。因为只有通过命令行方式才能查看私服信息,所以不是很便于操作。下面的博文将演示如何给registry添加web界面。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;如何搭建docker私服&quot;&gt;&lt;a href=&quot;#如何搭建docker私服&quot; class=&quot;headerlink&quot; title=&quot;如何搭建docker私服&quot;&gt;&lt;/a&gt;如何搭建docker私服&lt;/h1&gt;&lt;p&gt;##环境准备&lt;/p&gt;
+&lt;p&gt;软件包：&lt;/p&gt;
+&lt;ul&gt;
+&lt;l
+    
+    </summary>
+    
+      <category term="docker" scheme="http://jeffsui.github.io/categories/docker/"/>
+    
+    
+      <category term="docker" scheme="http://jeffsui.github.io/tags/docker/"/>
+    
+      <category term="registry" scheme="http://jeffsui.github.io/tags/registry/"/>
+    
+      <category term="registry-ui" scheme="http://jeffsui.github.io/tags/registry-ui/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>how git version rollback</title>
+    <link href="http://jeffsui.github.io/2015/05/16/how-git-version-rollback/"/>
+    <id>http://jeffsui.github.io/2015/05/16/how-git-version-rollback/</id>
+    <published>2015-05-16T13:58:30.000Z</published>
+    <updated>2016-09-20T06:17:24.965Z</updated>
+    
+    <content type="html"><![CDATA[<blockquote>
+<p>如何进行远程版本回退……</p>
+</blockquote>
+<p>#引言</p>
+<blockquote>
+<p>一切都要从一个蛋疼的需求开始,老板说,能给远程仓库的版本回退吗？我说为毛？他说我就是试试看git好使不,我……</p>
+</blockquote>
+<p>#咋搞</p>
+<ul>
+<li>背景 </li>
+</ul>
+<p>gitcafe 国内知名的源码托管平台</p>
+<ul>
+<li>分析</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">1、git checkout the_branch</div><div class="line"></div><div class="line">2、git pull</div><div class="line"></div><div class="line">3、git branch the_branch_backup //备份一下这个分支当前的情况</div><div class="line"></div><div class="line">4、git reset --hard the_commit_id //把the_branch本地回滚到the_commit_id</div><div class="line"></div><div class="line">5、git push origin :the_branch //删除远程 the_branch</div><div class="line"></div><div class="line">6、git push origin the_branch //用回滚后的本地分支重新建立远程分支</div><div class="line"></div><div class="line">7、git push origin :the_branch_backup //如果前面都成功了，删除这个备份分支</div></pre></td></tr></table></figure>
+<ul>
+<li>删除远程分支</li>
+</ul>
+<p>首先,任何一个git源码托管平台都会告诉你,别删除远程master分支,因为它是默认的分支……,请移步<a href="https://gitcafe.com/GitCafe/Help/wiki/%E5%A6%82%E4%BD%95%E5%88%A0%E9%99%A4-Master-%E5%88%86%E6%94%AF" target="_blank" rel="external">这里</a> </p>
+<ul>
+<li>操作步骤 </li>
+</ul>
+<p>如果远程只有一个master分支,请你创建一个非master分支,然后推送到远程。<br>有人会问我为什么？打个比方,你见过上旱厕的时候,给自己脚下站着的板子抽走吗？</p>
+<p>脚本类似下面这样</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">git branch the_master_backup</div><div class="line"></div><div class="line">git push origin the_master_backup</div></pre></td></tr></table></figure>
+<p>此时你查看远程分支应该有两个:master和the_master_backup</p>
+<p>设置默认的分支为 the_master_backup</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">git branch -D branch_name //删除本地master分支</div><div class="line"></div><div class="line">git push :master //推送一个空分支,相当于删除远程master分支</div></pre></td></tr></table></figure>
+<p>然后你在the_master_backup分支上 回滚到你要回滚的commit_id,然后重建master分支并推送到远程,顺便删除the_master_backup分支(包括远程the_master_backup分支)。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">git checkout the_master_backup</div><div class="line"></div><div class="line">git reset --hard commit_id</div><div class="line"></div><div class="line">git branch master //重新创建master分支</div><div class="line"></div><div class="line">git push origin master //重新推送master分支</div><div class="line"></div><div class="line">git branch -D the_master_backup //删除本地the_master_backup分支</div><div class="line"></div><div class="line">git push origin :the_master_backup//删除远程the_master_backup分支</div></pre></td></tr></table></figure>
+<p>#遇到的问题</p>
+<ol>
+<li>忘记设置默认分支为非master分支</li>
+</ol>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">remote: error: By default, deleting the current branch is denied, because the ne</div><div class="line">xt</div><div class="line">remote: error: &apos;git clone&apos; won&apos;t result in any file checked out, causing confusi</div><div class="line">on.</div><div class="line">remote: error:</div><div class="line">remote: error: You can set &apos;receive.denyDeleteCurrent&apos; configuration variable to</div><div class="line"></div><div class="line">remote: error: &apos;warn&apos; or &apos;ignore&apos; in the remote repository to allow deleting the</div><div class="line"></div><div class="line">remote: error: current branch, with or without a warning message.</div><div class="line">remote: error:</div><div class="line">remote: error: To squelch this message, you can set it to &apos;refuse&apos;.</div><div class="line">...</div></pre></td></tr></table></figure>
+<p>#总结</p>
+<p>如果你遇到的是所有提交只有master分支,那么希望我这个博文能帮到你。当然git强大的分支功能你基本也用不到了。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;blockquote&gt;
+&lt;p&gt;如何进行远程版本回退……&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;#引言&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;一切都要从一个蛋疼的需求开始,老板说,能给远程仓库的版本回退吗？我说为毛？他说我就是试试看git好使不,我……&lt;/p&gt;
+&lt;/bloc
+    
+    </summary>
+    
+      <category term="git" scheme="http://jeffsui.github.io/categories/git/"/>
+    
+    
+      <category term="git" scheme="http://jeffsui.github.io/tags/git/"/>
+    
+      <category term="gitcafe" scheme="http://jeffsui.github.io/tags/gitcafe/"/>
+    
+      <category term="版本管理" scheme="http://jeffsui.github.io/tags/%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>javascript oop 15 min programming</title>
+    <link href="http://jeffsui.github.io/2015/04/23/javascript-oop-15-min-programming/"/>
+    <id>http://jeffsui.github.io/2015/04/23/javascript-oop-15-min-programming/</id>
+    <published>2015-04-23T05:13:30.000Z</published>
+    <updated>2016-09-20T06:17:25.009Z</updated>
+    
+    <content type="html"><![CDATA[<p>#javascript的面向对象15分钟教程</p>
+<h2 id="第一种面向对象的写法"><a href="#第一种面向对象的写法" class="headerlink" title="第一种面向对象的写法"></a>第一种面向对象的写法</h2><p>##创建空对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">var bill =&#123;&#125;;//创建一个空对象</div></pre></td></tr></table></figure>
+<p>##给对象添加属性和方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">bill.name = &quot;Bill Goat&quot;;</div><div class="line">bill.work = function ()&#123;</div><div class="line">    console.log(&quot;programming....&quot;);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>##一步完成上面的两件事</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">var bill =&#123;</div><div class="line">    name : &quot;Bill Goat&quot;;</div><div class="line">    work : function()&#123;</div><div class="line">    console.log(&quot;programming....&quot;);</div><div class="line">&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>##访问对象和属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">console.log(bill.name);</div><div class="line">bill.work();</div></pre></td></tr></table></figure>
+<p>##方法重写</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">bill.name = &quot;Bill Goat&quot;;</div><div class="line">bill.work =function(who)&#123;</div><div class="line">     console.log(&quot;programming for &quot;+who);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>##通过this关键字访问内部属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">bill.say = function ()&#123;</div><div class="line">    console.log(&quot;bill&apos;s name  is&quot;+this.name);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<p>##对象引用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">var silly = bill;</div><div class="line">console.log(silly.name);</div><div class="line">sally.name = &quot;Silly&quot;;</div><div class="line">console.log(silly.name);</div><div class="line">console.log(bill.name);</div></pre></td></tr></table></figure></p>
+<p>##另一个方式引用<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">bill.name = &quot;Bill Goat&quot;;</div><div class="line">bill.say();</div><div class="line"></div><div class="line">var sayName = bill.say();</div><div class="line">sayName;</div><div class="line">sayName();</div></pre></td></tr></table></figure></p>
+<p>##有意思的地方 ：全局属性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">var name = &quot;Global&quot;;</div><div class="line">bill.say();</div></pre></td></tr></table></figure></p>
+<p>发现此时输出的是<br><code>bill&#39;s name is Global</code></p>
+<h2 id="另一种面向对象的写法"><a href="#另一种面向对象的写法" class="headerlink" title="另一种面向对象的写法"></a>另一种面向对象的写法</h2><p>##定义对象及属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">function Game()&#123;&#125;;</div></pre></td></tr></table></figure>
+<p>##创建对象</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var DF = new Game();</div></pre></td></tr></table></figure>
+<p>##对象属性</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">DF.title = &quot;星际争霸2&quot;;</div></pre></td></tr></table></figure>
+<p>##构造方法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">function Game (title)&#123;</div><div class="line">	this.title = typeof title !== &apos;undifined&apos; ? title :&quot;&quot;;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">var d3 = new Game(&quot;d3&quot;);</div><div class="line">d3.title;</div><div class="line">d3.title =&quot;starcraft2&quot;;</div></pre></td></tr></table></figure>
+<p><code>this.title = typeof title !== &#39;undifined&#39; ? title :&quot;&quot;;</code>相当于</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">if(typeof title !== &quot;undifined&quot;）&#123;</div><div class="line">	this.title = title;</div><div class="line">&#125;else&#123;</div><div class="line">	this.title = &quot;&quot;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>##创建一个方法来访问这个属性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">d3.loveTitle = function ()&#123;</div><div class="line">	console.log(&quot;I love &quot;+this.title);</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>##更好的写法</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">Game.prototype.heartIt = function ()&#123;</div><div class="line">	console.log(&quot;I love &quot;+this.title);</div><div class="line">&#125;</div><div class="line">d3.heartIt();</div></pre></td></tr></table></figure>
+<p>下次详解javascript的原生对象模型</p>
+<p>to be continued~~~~</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;#javascript的面向对象15分钟教程&lt;/p&gt;
+&lt;h2 id=&quot;第一种面向对象的写法&quot;&gt;&lt;a href=&quot;#第一种面向对象的写法&quot; class=&quot;headerlink&quot; title=&quot;第一种面向对象的写法&quot;&gt;&lt;/a&gt;第一种面向对象的写法&lt;/h2&gt;&lt;p&gt;##创建空对象&lt;
+    
+    </summary>
+    
+      <category term="javascript" scheme="http://jeffsui.github.io/categories/javascript/"/>
+    
+    
+      <category term="javascript" scheme="http://jeffsui.github.io/tags/javascript/"/>
+    
+      <category term="oop" scheme="http://jeffsui.github.io/tags/oop/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>talk about software engineering</title>
+    <link href="http://jeffsui.github.io/2015/04/22/talk-about-software-engineering/"/>
+    <id>http://jeffsui.github.io/2015/04/22/talk-about-software-engineering/</id>
+    <published>2015-04-22T01:12:54.000Z</published>
+    <updated>2016-09-20T06:17:25.036Z</updated>
+    
+    <content type="html"><![CDATA[<p>#关于软件工程的讨论–质量篇</p>
+<blockquote>
+<p>那为什么软件系统的质量不容易高呢？我觉得主要原因是流程不完善。那为什么不完善？需求容易变。为什么容易变？是因为不论程序员自己，还是需求方，其实潜意识都认为自己做的东西是变更成本较低的。</p>
+<p>试想一下，为什么没人在盖高楼盖一半变更需求？为什么没人修大桥修一半变更需求？甚至做衣服做一半的时候变更需求，理发到一半变更需求，都会被人认为是不讲理。但是在软件领域，好像这倒成了普遍现象。</p>
+<p>因为整个软件系统的实现，都是虚拟的，看不见摸不着，并不消耗什么物料，所以从这个角度想，变起来当然是容易的。但软件系统的架构，其实也跟实体的没本质区别，变更时候要考虑很多关联因素，并不是就那么孤立的看一小块地方，当然，也会有一些不影响全局的变更。打个比方说，如果你在盖房子盖到一半，那变更外墙颜色肯定是要比变更窗户大小容易的。要是想变得太多，估计只好拆了重来。</p>
+</blockquote>
+<p>下面的讨论更加精彩:</p>
+<p>A:其实不是流程问题，老板和甲方问题</p>
+<p>A:甲方尤其关键 </p>
+<p>A:尼玛，要8层楼房，付2层费用</p>
+<p>……</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;#关于软件工程的讨论–质量篇&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;那为什么软件系统的质量不容易高呢？我觉得主要原因是流程不完善。那为什么不完善？需求容易变。为什么容易变？是因为不论程序员自己，还是需求方，其实潜意识都认为自己做的东西是变更成本较低的。&lt;/p&gt;
+&lt;p&gt;试想
+    
+    </summary>
+    
+      <category term="软件工程" scheme="http://jeffsui.github.io/categories/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/"/>
+    
+    
+      <category term="软件工程" scheme="http://jeffsui.github.io/tags/%E8%BD%AF%E4%BB%B6%E5%B7%A5%E7%A8%8B/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>javascript asynchronous programming learning :event</title>
+    <link href="http://jeffsui.github.io/2015/04/20/javascript-asynchronous-programming-learning-event/"/>
+    <id>http://jeffsui.github.io/2015/04/20/javascript-asynchronous-programming-learning-event/</id>
+    <published>2015-04-20T13:05:16.000Z</published>
+    <updated>2016-09-20T06:17:25.003Z</updated>
+    
+    <content type="html"><![CDATA[<p>#javascript异步编程读书笔记之事件机制</p>
+<p>##事件的调度</p>
+<ul>
+<li>异步执行</li>
+</ul>
+<p><code>setTimeout</code>函数的解释:给定一个回调及n毫秒的延迟,setTimeout会在n毫秒后运行该回调。</p>
+<p>代码清单1:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">for (var i = 1; i &lt;= 3; i++) &#123;</div><div class="line">	setTimeout(function()&#123; </div><div class="line">		console.log(i); &#125;, </div><div class="line">	0);</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>输出结果:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">4</div><div class="line">4</div><div class="line">4</div></pre></td></tr></table></figure>
+<ul>
+<li><p>线程阻塞<br>代码清单2:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">var start = new Date;</div><div class="line">setTimeout(function()&#123;</div><div class="line">var end = new Date;</div><div class="line">console.log(&apos;Time elapsed:&apos;, end - start, &apos;ms&apos;);</div><div class="line">&#125;, 500);</div><div class="line">while (new Date - start &lt; 1000) &#123;&#125;;</div></pre></td></tr></table></figure>
+</li>
+<li><p>队列</p>
+</li>
+</ul>
+<p>javascript使用队列的方式来循环处理请求,这种机制被称为<strong>事件循环</strong>。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;#javascript异步编程读书笔记之事件机制&lt;/p&gt;
+&lt;p&gt;##事件的调度&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;异步执行&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;&lt;code&gt;setTimeout&lt;/code&gt;函数的解释:给定一个回调及n毫秒的延迟,setTimeout会在n毫秒后运行该回调。
+    
+    </summary>
+    
+      <category term="javascript" scheme="http://jeffsui.github.io/categories/javascript/"/>
+    
+    
+      <category term="javascript" scheme="http://jeffsui.github.io/tags/javascript/"/>
+    
+      <category term="异步" scheme="http://jeffsui.github.io/tags/%E5%BC%82%E6%AD%A5/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>use-shorturl and two-dimensional-barcodes to beautify blog</title>
+    <link href="http://jeffsui.github.io/2015/04/20/use-shorturl-and-two-dimensional-barcodes-to-beautify-blog/"/>
+    <id>http://jeffsui.github.io/2015/04/20/use-shorturl-and-two-dimensional-barcodes-to-beautify-blog/</id>
+    <published>2015-04-20T07:37:14.000Z</published>
+    <updated>2016-09-20T06:17:25.041Z</updated>
+    
+    <content type="html"><![CDATA[<p>#如何使用短网址和二维码简化网站访问</p>
+<ol>
+<li>短网址(shorturl)<br> web2.0时代的潮流,借助短网址您可以用简短的网址替代原来冗长的网址，让使用者可以更容易的分享链接。<br>这里我使用的是百度的短网址服务:<a href="http://dwz.cn/" title="百度短网址" target="_blank" rel="external">http://dwz.cn/</a><ol>
+<li>访问<a href="http://dwz.cn/主页" target="_blank" rel="external">http://dwz.cn/主页</a><br><img src="http://7xindo.com1.z0.glb.clouddn.com/百度短网址.png" alt=""></li>
+<li>输入你的博客地址<br>我输入<a href="http://jeffsui.github.io/pinghailinfeng_blog/">http://jeffsui.github.io/pinghailinfeng_blog/</a></li>
+<li>复制短网址<br><img src="http://7xindo.com1.z0.glb.clouddn.com/百度短网址生成.png" alt=""></li>
+</ol>
+</li>
+<li>二维码(two-dimensional-barcodes)<br>微信时代,不知道二维码的基本都属于外星球人了。<br>这里我选择的是草料二维码:<br><a href="http://cli.im/" title="草料二维码" target="_blank" rel="external">http://cli.im/</a><ol>
+<li>输入二维码地址<br><img src="http://7xindo.com1.z0.glb.clouddn.com/在线二维码输入地址.jpg" alt=""></li>
+<li>进行一些基本设置<br>包括前景色、背景色、渐变色等等。</li>
+<li>嵌入图片</li>
+<li>选用你喜欢的模板</li>
+<li>保存二维码</li>
+</ol>
+</li>
+<li>在线存储<br>这里我选择国内知名的七牛云存储。<br> <img src="http://7xindo.com1.z0.glb.clouddn.com/云存储图片.jpg" alt=""><br>4.在博客中引用图片地址就可以了</li>
+</ol>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;#如何使用短网址和二维码简化网站访问&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;短网址(shorturl)&lt;br&gt; web2.0时代的潮流,借助短网址您可以用简短的网址替代原来冗长的网址，让使用者可以更容易的分享链接。&lt;br&gt;这里我使用的是百度的短网址服务:&lt;a href=&quot;http://
+    
+    </summary>
+    
+      <category term="搭建博客" scheme="http://jeffsui.github.io/categories/%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/"/>
+    
+    
+      <category term="博客" scheme="http://jeffsui.github.io/tags/%E5%8D%9A%E5%AE%A2/"/>
+    
+      <category term="美化" scheme="http://jeffsui.github.io/tags/%E7%BE%8E%E5%8C%96/"/>
+    
+      <category term="短网址" scheme="http://jeffsui.github.io/tags/%E7%9F%AD%E7%BD%91%E5%9D%80/"/>
+    
+      <category term="二维码" scheme="http://jeffsui.github.io/tags/%E4%BA%8C%E7%BB%B4%E7%A0%81/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>我的新文章</title>
+    <link href="http://jeffsui.github.io/2015/04/17/my-new-post/"/>
+    <id>http://jeffsui.github.io/2015/04/17/my-new-post/</id>
+    <published>2015-04-17T13:38:01.000Z</published>
+    <updated>2016-09-20T06:17:25.021Z</updated>
+    
+    <content type="html"><![CDATA[<p>#我的新文章</p>
+<p>   这是我的第一篇在<code>github</code>上的博客。记录下我的工作和生活,慢慢给其他的文章都更新到这里。嬉笑怒骂也好,喜怒哀乐也罢,我就是一个俗人罢了。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;#我的新文章&lt;/p&gt;
+&lt;p&gt;   这是我的第一篇在&lt;code&gt;github&lt;/code&gt;上的博客。记录下我的工作和生活,慢慢给其他的文章都更新到这里。嬉笑怒骂也好,喜怒哀乐也罢,我就是一个俗人罢了。&lt;/p&gt;
+
+    
+    </summary>
+    
+    
+      <category term="杂记" scheme="http://jeffsui.github.io/tags/%E6%9D%82%E8%AE%B0/"/>
+    
+      <category term="博客" scheme="http://jeffsui.github.io/tags/%E5%8D%9A%E5%AE%A2/"/>
+    
+      <category term="文章" scheme="http://jeffsui.github.io/tags/%E6%96%87%E7%AB%A0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>push-hexo-to-github</title>
+    <link href="http://jeffsui.github.io/2015/04/17/push-hexo-to-github/"/>
+    <id>http://jeffsui.github.io/2015/04/17/push-hexo-to-github/</id>
+    <published>2015-04-17T08:35:31.000Z</published>
+    <updated>2016-09-20T06:17:25.026Z</updated>
+    
+    <content type="html"><![CDATA[<p>#如何使用hexo在github上建立静态博客</p>
+<p>##环境搭建</p>
+<ol>
+<li><p>hexo环境搭建</p>
+<p> 请参考 hexo.io <a href="http://hexo.io/" title="官方站点" target="_blank" rel="external">官方站点</a>,<br> <strong>强烈建议</strong>给<em>基本操作</em>下的内容快速浏览一遍,下面的操作是我一个一个命令敲出来的,遇到的坑也会记录下来,希望大家能少走弯路。</p>
+</li>
+<li><p>github上建立静态博客</p>
+<ol>
+<li>github账号申请（略）</li>
+<li>建立一个github项目</li>
+<li><code>git clone 项目地址</code> 到本地</li>
+<li>项目初始化<br><code><pre><br>cd 项目名<br>echo # hexo 实例站点 &gt;&gt; README.md<br>git init<br>git add README.md<br>git commit -m “first blood”<br>git remote add origin 项目地址<br>git push -u origin master<br></pre></code></li>
+<li><p>github免费站点建立规则,请仔细阅读这个规则<br><a href="https://help.github.com/articles/user-organization-and-project-pages/" target="_blank" rel="external">https://help.github.com/articles/user-organization-and-project-pages/</a></p>
+</li>
+<li><p>默认github域名</p>
+<p>默认github 分配了 一个name.github.io的域名,<br>还有一个name.github.io/project_name的二级域名,<br>请参照github的提示设置URL。</p>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="华丽的分割线"><a href="#华丽的分割线" class="headerlink" title="华丽的分割线"></a>华丽的分割线</h2><ol>
+<li><p>站点配置流程</p>
+<ol>
+<li>建立站点文件夹,并站点初始化</li>
+<li>安装hexo依赖</li>
+<li>修改node_module/hexo-server/index.js,用于本地调试</li>
+<li>安装hexo-git-deployer插件</li>
+<li><p>修改全局配置文件_config.yml,配置<code>deploy</code><br><code><pre><br># Site 站点配置<br>title: 凭海临风的测试江湖<br>subtitle:<br>description: 凭海临风的博客<br>author: Jeff Sui<br>language: zh-CN<br>timezone<br></pre></code></p>
+<p><code><pre><br># URL 站点链接<br>## If your site is put in a subdirectory, set url as ‘<a href="http://yoursite.com/child" target="_blank" rel="external">http://yoursite.com/child</a>‘ and root as ‘/child/‘<br>url: <a href="http://jeffsui.github.io">http://jeffsui.github.io</a><br>root: /pinghailinfeng_blog/<br>permalink: :year/:month/:day/:title/<br>permalink_defaults:<br></pre></code></p>
+<p><code><pre><br># Deployment<br>## Docs: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">http://hexo.io/docs/deployment.html</a><br>deploy:<br>type: git<br>repo: <a href="https://github.com/jeffsui/pinghailinfeng_blog.git" target="_blank" rel="external">https://github.com/jeffsui/pinghailinfeng_blog.git</a><br>branch : master<br>message :<br></pre></code></p>
+<p><em>以上配置仅供参考</em></p>
+</li>
+</ol>
+</li>
+<li><p>创建文章</p>
+<ul>
+<li><p>执行<code>hexo new</code> 命令</p>
+<p>例如:hexo new post my-first-blog</p>
+<p><em>将会自动在source/_posts下创建一个my-first-blog.md的文件,使用的是scaffolds下的post.md模板</em></p>
+</li>
+<li><p>修改并保存my-first-blog.md文件</p>
+</li>
+<li><p>站点生成<code>hexo g</code></p>
+</li>
+<li><p>站点部署 <code>hexo d</code></p>
+<p>如果没有报错,恭喜你已经成功推送到 项目的master分支。</p>
+</li>
+</ul>
+</li>
+<li><p>创建gh-pages分支并推送到远程<br> <code><pre><br> git fetch origin master<br> git checkout gh-pages<br> git merge master<br> git push origin gh-pages<br> </pre></code></p>
+</li>
+<li>访问<a href="http://jeffsui.github.io/pinghailinfeng_blog/" title="站点">http://jeffsui.github.io/pinghailinfeng_blog/</a></li>
+</ol>
+<p>##遇到的问题</p>
+<ol>
+<li>github站点的规则不熟悉,url配置浪费我2个小时。项目建立的是二级域名,所以必须要按照我说的那样配置。</li>
+<li>本地预览有可能不加载样式,重新删除<code>node_module</code>下所有,执行<code>npm install</code>,再<code>hexo g</code>,<code>hexo server -i 127.0.0.1 -s -o</code>即可。</li>
+<li>hexo3.0版本的git插件必须要独立安装。</li>
+<li>其他坑,自己填吧。</li>
+</ol>
+<p>##总结</p>
+<p><em>大坑各种有,github特别多,还有伟大的墙,兄弟们,github好上,填坑需谨慎！</em></p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;#如何使用hexo在github上建立静态博客&lt;/p&gt;
+&lt;p&gt;##环境搭建&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;hexo环境搭建&lt;/p&gt;
+&lt;p&gt; 请参考 hexo.io &lt;a href=&quot;http://hexo.io/&quot; title=&quot;官方站点&quot; target=&quot;_blank&quot;
+    
+    </summary>
+    
+      <category term="hexo" scheme="http://jeffsui.github.io/categories/hexo/"/>
+    
+    
+      <category term="hexo" scheme="http://jeffsui.github.io/tags/hexo/"/>
+    
+      <category term="搭建" scheme="http://jeffsui.github.io/tags/%E6%90%AD%E5%BB%BA/"/>
+    
+      <category term="笔记" scheme="http://jeffsui.github.io/tags/%E7%AC%94%E8%AE%B0/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>sublime run slow problem</title>
+    <link href="http://jeffsui.github.io/2015/04/17/sublime-run-slow-problem/"/>
+    <id>http://jeffsui.github.io/2015/04/17/sublime-run-slow-problem/</id>
+    <published>2015-04-17T06:49:18.000Z</published>
+    <updated>2016-09-20T06:17:25.031Z</updated>
+    
+    <content type="html"><![CDATA[<p>#解决sublime Text2运行缓慢的方法</p>
+<p>今天打开<code>sublime</code>想写博客发现整个页面打开很慢,切换tab要等好几秒。<br>发现了一个帖子,说<code>GitGutter</code>这个插件在st2下会影响切换tab速度。</p>
+<p>于是 <code>ctrl+shift+p</code>调出命令,remove package,选择<code>GitGutter</code>,回车。<br>重启sublime,世界都变得清静了。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;#解决sublime Text2运行缓慢的方法&lt;/p&gt;
+&lt;p&gt;今天打开&lt;code&gt;sublime&lt;/code&gt;想写博客发现整个页面打开很慢,切换tab要等好几秒。&lt;br&gt;发现了一个帖子,说&lt;code&gt;GitGutter&lt;/code&gt;这个插件在st2下会影响切换tab速度。&lt;
+    
+    </summary>
+    
+      <category term="工具篇" scheme="http://jeffsui.github.io/categories/%E5%B7%A5%E5%85%B7%E7%AF%87/"/>
+    
+    
+      <category term="sublime" scheme="http://jeffsui.github.io/tags/sublime/"/>
+    
+      <category term="GitGutter" scheme="http://jeffsui.github.io/tags/GitGutter/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>first-blog</title>
+    <link href="http://jeffsui.github.io/2015/04/17/first-blog/"/>
+    <id>http://jeffsui.github.io/2015/04/17/first-blog/</id>
+    <published>2015-04-17T05:39:23.000Z</published>
+    <updated>2016-09-20T06:17:24.960Z</updated>
+    
+    <content type="html"><![CDATA[<p>#第一个博客</p>
+<p>##记录使用hexo的各种填坑。</p>
+]]></content>
+    
+    <summary type="html">
+    
+      &lt;p&gt;#第一个博客&lt;/p&gt;
+&lt;p&gt;##记录使用hexo的各种填坑。&lt;/p&gt;
+
+    
+    </summary>
+    
+      <category term="搭建博客" scheme="http://jeffsui.github.io/categories/%E6%90%AD%E5%BB%BA%E5%8D%9A%E5%AE%A2/"/>
+    
+    
+      <category term="杂记" scheme="http://jeffsui.github.io/tags/%E6%9D%82%E8%AE%B0/"/>
+    
+  </entry>
+  
+</feed>

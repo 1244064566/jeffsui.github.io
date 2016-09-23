@@ -233,6 +233,85 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/20/javascript-asynchronous-programming-learning-event/" title="javascript asynchronous programming learning :event" itemprop="url">javascript asynchronous programming learning :event</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jeff Sui" target="_blank" itemprop="author">Jeff Sui</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-20T13:05:16.000Z" itemprop="datePublished"> 发表于 2015-04-20</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>#javascript异步编程读书笔记之事件机制</p>
+<p>##事件的调度</p>
+<ul>
+<li>异步执行</li>
+</ul>
+<p><code>setTimeout</code>函数的解释:给定一个回调及n毫秒的延迟,setTimeout会在n毫秒后运行该回调。</p>
+<p>代码清单1:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">for (var i = 1; i &lt;= 3; i++) &#123;</div><div class="line">	setTimeout(function()&#123; </div><div class="line">		console.log(i); &#125;, </div><div class="line">	0);</div><div class="line">&#125;;</div></pre></td></tr></table></figure></p>
+<p>输出结果:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">4</div><div class="line">4</div><div class="line">4</div></pre></td></tr></table></figure>
+<ul>
+<li><p>线程阻塞<br>代码清单2:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">var start = new Date;</div><div class="line">setTimeout(function()&#123;</div><div class="line">var end = new Date;</div><div class="line">console.log(&apos;Time elapsed:&apos;, end - start, &apos;ms&apos;);</div><div class="line">&#125;, 500);</div><div class="line">while (new Date - start &lt; 1000) &#123;&#125;;</div></pre></td></tr></table></figure>
+</li>
+<li><p>队列</p>
+</li>
+</ul>
+<p>javascript使用队列的方式来循环处理请求,这种机制被称为<strong>事件循环</strong>。</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/javascript/">javascript</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/javascript/">javascript</a><a href="/tags/异步/">异步</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/20/javascript-asynchronous-programming-learning-event/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/20/javascript-asynchronous-programming-learning-event/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/20/use-shorturl-and-two-dimensional-barcodes-to-beautify-blog/" title="use-shorturl and two-dimensional-barcodes to beautify blog" itemprop="url">use-shorturl and two-dimensional-barcodes to beautify blog</a>
   </h1>
   <p class="article-author">By
@@ -555,73 +634,9 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/first-blog/" title="first-blog" itemprop="url">first-blog</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jeff Sui" target="_blank" itemprop="author">Jeff Sui</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T05:39:23.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>#第一个博客</p>
-<p>##记录使用hexo的各种填坑。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/搭建博客/">搭建博客</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/杂记/">杂记</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/first-blog/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/first-blog/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
-    <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+    <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next<span></span></a>
   </nav>
 
 </div>
@@ -649,7 +664,7 @@
 		  
 		
 		  
-			<li><a href="/categories/git/" title="git">git<sup>1</sup></a></li>
+			<li><a href="/categories/git/" title="git">git<sup>2</sup></a></li>
 		  
 		
 		  
@@ -686,7 +701,7 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/版本管理/" title="版本管理">版本管理<sup>2</sup></a></li>
+				<li><a href="/tags/git/" title="git">git<sup>3</sup></a></li>
 			
 		
 			
@@ -694,11 +709,11 @@
 			
 		
 			
-				<li><a href="/tags/javascript/" title="javascript">javascript<sup>2</sup></a></li>
+				<li><a href="/tags/版本管理/" title="版本管理">版本管理<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/git/" title="git">git<sup>2</sup></a></li>
+				<li><a href="/tags/javascript/" title="javascript">javascript<sup>2</sup></a></li>
 			
 		
 			
@@ -706,11 +721,7 @@
 			
 		
 			
-				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/异步/" title="异步">异步<sup>1</sup></a></li>
+				<li><a href="/tags/cygwin/" title="cygwin">cygwin<sup>1</sup></a></li>
 			
 		
 			
@@ -726,6 +737,14 @@
 			
 		
 			
+				<li><a href="/tags/gitcafe/" title="gitcafe">gitcafe<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/异步/" title="异步">异步<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/oop/" title="oop">oop<sup>1</sup></a></li>
 			
 		
@@ -738,31 +757,27 @@
 			
 		
 			
-				<li><a href="/tags/持续集成/" title="持续集成">持续集成<sup>1</sup></a></li>
+				<li><a href="/tags/二维码/" title="二维码">二维码<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/gitcafe/" title="gitcafe">gitcafe<sup>1</sup></a></li>
+				<li><a href="/tags/sublime/" title="sublime">sublime<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/搭建/" title="搭建">搭建<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/笔记/" title="笔记">笔记<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/mongodb/" title="mongodb">mongodb<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/windows/" title="windows">windows<sup>1</sup></a></li>
+				<li><a href="/tags/GitGutter/" title="GitGutter">GitGutter<sup>1</sup></a></li>
 			
 		
 			
 				<li><a href="/tags/photo/" title="photo">photo<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/github/" title="github">github<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/文章/" title="文章">文章<sup>1</sup></a></li>
 			
 		
 		</ul>
