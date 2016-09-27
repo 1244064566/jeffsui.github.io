@@ -5,7 +5,7 @@
   <link href="/atom.xml" rel="self"/>
   
   <link href="http://jeffsui.github.io/"/>
-  <updated>2016-09-23T00:47:08.464Z</updated>
+  <updated>2016-09-27T03:07:53.819Z</updated>
   <id>http://jeffsui.github.io/</id>
   
   <author>
@@ -14,6 +14,34 @@
   </author>
   
   <generator uri="http://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>how to use nginx on windows</title>
+    <link href="http://jeffsui.github.io/2016/09/27/how-to-use-nginx-on-windows/"/>
+    <id>http://jeffsui.github.io/2016/09/27/how-to-use-nginx-on-windows/</id>
+    <published>2016-09-27T02:27:56.000Z</published>
+    <updated>2016-09-27T03:07:53.819Z</updated>
+    
+    <content type="html"><![CDATA[<h1 id="how-to-use-nginx-on-windows"><a href="#how-to-use-nginx-on-windows" class="headerlink" title="how to use nginx on windows"></a>how to use nginx on windows</h1><h2 id="1-Download-nginx-lastest-release-from-here"><a href="#1-Download-nginx-lastest-release-from-here" class="headerlink" title="1. Download nginx lastest release from here."></a>1. Download nginx lastest release from <a href="http://nginx.org/en/download.html" target="_blank" rel="external">here</a>.</h2><h2 id="2-unzip-to-your-local-driver-eg-c-apps-nginx"><a href="#2-unzip-to-your-local-driver-eg-c-apps-nginx" class="headerlink" title="2. unzip to your local driver. eg: c:/apps/nginx"></a>2. unzip to your local driver. eg: <code>c:/apps/nginx</code></h2><h2 id="3-start-nginx"><a href="#3-start-nginx" class="headerlink" title="3. start nginx"></a>3. start nginx</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">cd c:/apps/nginx</div><div class="line">start nginx</div></pre></td></tr></table></figure>
+<h2 id="4-monitoring-nginx-process"><a href="#4-monitoring-nginx-process" class="headerlink" title="4. monitoring nginx process"></a>4. monitoring nginx process</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">tasklist /fi &quot;imagename eq nginx.exe&quot;</div><div class="line">Image Name                     PID Session Name        Session#    Mem Usage</div><div class="line">========================= ======== ================ =========== ============</div><div class="line">nginx.exe                    11700 Console                    1     10,696 K</div><div class="line">nginx.exe                     1160 Console                    1     11,180 K</div></pre></td></tr></table></figure>
+<p><strong>notice</strong><br>一个是主进程(main process),另一个是工作进程(work process).如果启动失败,请查看错误日志<code>logs\error.log</code></p>
+<h2 id="5-visit-http-localhost-8080"><a href="#5-visit-http-localhost-8080" class="headerlink" title="5. visit http://localhost:8080"></a>5. visit <a href="http://localhost:8080" target="_blank" rel="external">http://localhost:8080</a></h2><h2 id="6-configuration-file-nginx-conf"><a href="#6-configuration-file-nginx-conf" class="headerlink" title="6. configuration file nginx.conf"></a>6. configuration file <code>nginx.conf</code></h2><p><em>reference config</em><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">error_log  logs/error.log;</div><div class="line">http &#123;</div><div class="line">    include       mime.types;</div><div class="line">    default_type  application/octet-stream;</div><div class="line">    server &#123;</div><div class="line">                listen       8080;</div><div class="line">                server_name  localhost;</div><div class="line">                location / &#123;</div><div class="line">                    root   html;</div><div class="line">                    index  index.html index.htm;</div><div class="line">                &#125;</div><div class="line">                error_page   500 502 503 504  /50x.html;</div><div class="line">                location = /50x.html &#123;</div><div class="line">                    root   html;</div><div class="line">                &#125;</div><div class="line">        &#125;</div><div class="line">    ...</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="7-the-command-list-of-nginx："><a href="#7-the-command-list-of-nginx：" class="headerlink" title="7. the command list of nginx："></a>7. the command list of nginx：</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">nginx -s stop   快速退出</div><div class="line">nginx -s quit   优雅退出</div><div class="line">nginx -s reload 更换配置，启动新的工作进程，优雅的关闭以往的工作进程</div><div class="line">nginx -s reopen 重新打开日志文件</div></pre></td></tr></table></figure>]]></content>
+    
+    <summary type="html">
+    
+      &lt;h1 id=&quot;how-to-use-nginx-on-windows&quot;&gt;&lt;a href=&quot;#how-to-use-nginx-on-windows&quot; class=&quot;headerlink&quot; title=&quot;how to use nginx on windows&quot;&gt;&lt;/a&gt;how t
+    
+    </summary>
+    
+      <category term="nginx" scheme="http://jeffsui.github.io/categories/nginx/"/>
+    
+    
+      <category term="nginx" scheme="http://jeffsui.github.io/tags/nginx/"/>
+    
+      <category term="windows" scheme="http://jeffsui.github.io/tags/windows/"/>
+    
+  </entry>
   
   <entry>
     <title>how git changing author info</title>
@@ -183,9 +211,9 @@
       <category term="db" scheme="http://jeffsui.github.io/categories/db/"/>
     
     
-      <category term="mongodb" scheme="http://jeffsui.github.io/tags/mongodb/"/>
-    
       <category term="windows" scheme="http://jeffsui.github.io/tags/windows/"/>
+    
+      <category term="mongodb" scheme="http://jeffsui.github.io/tags/mongodb/"/>
     
   </entry>
   
