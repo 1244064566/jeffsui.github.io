@@ -21,7 +21,7 @@ no code say nothing这时候你需要的是maven-dependency-plugin。
 <meta property="og:description" content="copy maven dependencies to a folderbackground一个简单的需求,当你的同事需要调试代码的时候,他并不想建立maven环境,这时候依赖的jar包 该如何导出呢?
 no code say nothing这时候你需要的是maven-dependency-plugin。
 添加依赖配置12345678910111213141516171819202122232425">
-<meta property="og:updated_time" content="2016-09-30T05:14:58.822Z">
+<meta property="og:updated_time" content="2016-09-30T05:33:47.068Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="copy maven dependencies to a folder">
 <meta name="twitter:description" content="copy maven dependencies to a folderbackground一个简单的需求,当你的同事需要调试代码的时候,他并不想建立maven环境,这时候依赖的jar包 该如何导出呢?
@@ -254,7 +254,7 @@ no code say nothing这时候你需要的是maven-dependency-plugin。
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">文章目录</strong>
 		
-			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#copy-maven-dependencies-to-a-folder"><span class="toc-number">1.</span> <span class="toc-text">copy maven dependencies to a folder</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#background"><span class="toc-number">1.1.</span> <span class="toc-text">background</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#no-code-say-nothing"><span class="toc-number">1.2.</span> <span class="toc-text">no code say nothing</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#添加依赖配置"><span class="toc-number">1.2.1.</span> <span class="toc-text">添加依赖配置</span></a></li></ol></li></ol></li></ol>
+			<ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#copy-maven-dependencies-to-a-folder"><span class="toc-number">1.</span> <span class="toc-text">copy maven dependencies to a folder</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#background"><span class="toc-number">1.1.</span> <span class="toc-text">background</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#no-code-say-nothing"><span class="toc-number">1.2.</span> <span class="toc-text">no code say nothing</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#添加依赖配置"><span class="toc-number">1.2.1.</span> <span class="toc-text">添加依赖配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行命令-mvn-dependency-copy-dependencies"><span class="toc-number">1.2.2.</span> <span class="toc-text">执行命令 mvn dependency:copy-dependencies</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看项目多了一个-alternateLocation目录-并且依赖的jar包都下载到这个目录下了。"><span class="toc-number">1.2.3.</span> <span class="toc-text">查看项目多了一个/alternateLocation目录,并且依赖的jar包都下载到这个目录下了。</span></a></li></ol></li></ol></li></ol>
 		
 		</div>
 		
@@ -262,7 +262,7 @@ no code say nothing这时候你需要的是maven-dependency-plugin。
 <h2 id="no-code-say-nothing"><a href="#no-code-say-nothing" class="headerlink" title="no code say nothing"></a>no code say nothing</h2><p>这时候你需要的是<a href="http://maven.apache.org/plugins/maven-dependency-plugin/" target="_blank" rel="external">maven-dependency-plugin</a>。</p>
 <h3 id="添加依赖配置"><a href="#添加依赖配置" class="headerlink" title="添加依赖配置"></a>添加依赖配置</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line">&lt;plugins&gt;</div><div class="line">            &lt;plugin&gt;</div><div class="line">                &lt;groupId&gt;org.eclipse.m2e&lt;/groupId&gt;</div><div class="line">                &lt;artifactId&gt;lifecycle-mapping&lt;/artifactId&gt;</div><div class="line">                &lt;version&gt;1.0.0&lt;/version&gt;</div><div class="line">                &lt;configuration&gt;</div><div class="line">                    &lt;lifecycleMappingMetadata&gt;</div><div class="line">                        &lt;pluginExecutions&gt;</div><div class="line">                            &lt;!-- copy-dependency plugin --&gt;</div><div class="line">                            &lt;pluginExecution&gt;</div><div class="line">                                &lt;pluginExecutionFilter&gt;</div><div class="line">                                    &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;</div><div class="line">                                    &lt;artifactId&gt;maven-dependency-plugin&lt;/artifactId&gt;</div><div class="line">                                    &lt;versionRange&gt;[1.0.0,)&lt;/versionRange&gt;</div><div class="line">                                    &lt;goals&gt;</div><div class="line">                                        &lt;goal&gt;copy-dependencies&lt;/goal&gt;</div><div class="line">                                    &lt;/goals&gt;</div><div class="line">                                    &lt;configuration&gt;</div><div class="line">                                        &lt;outputDirectory&gt;$&#123;project.build.directory&#125;/alternateLocation&lt;/outputDirectory&gt;</div><div class="line">                                        &lt;overWriteReleases&gt;false&lt;/overWriteReleases&gt;</div><div class="line">                                        &lt;overWriteSnapshots&gt;false&lt;/overWriteSnapshots&gt;</div><div class="line">                                        &lt;overWriteIfNewer&gt;true&lt;/overWriteIfNewer&gt;</div><div class="line">                                    &lt;/configuration&gt;</div><div class="line">                                &lt;/pluginExecutionFilter&gt;</div><div class="line">                                &lt;action&gt;</div><div class="line">                                    &lt;ignore /&gt;</div><div class="line">                                &lt;/action&gt;</div><div class="line">                            &lt;/pluginExecution&gt;</div><div class="line">                        &lt;/pluginExecutions&gt;</div><div class="line">                    &lt;/lifecycleMappingMetadata&gt;</div><div class="line">                &lt;/configuration&gt;</div><div class="line">            &lt;/plugin&gt;</div><div class="line">    &lt;/plugins&gt;</div></pre></td></tr></table></figure>
 <p>此处的<code>&lt;outputDirectory&gt;</code> 指定了你导出jar包的路径.</p>
-  
+<h3 id="执行命令-mvn-dependency-copy-dependencies"><a href="#执行命令-mvn-dependency-copy-dependencies" class="headerlink" title="执行命令 mvn dependency:copy-dependencies"></a>执行命令 <code>mvn dependency:copy-dependencies</code></h3><h3 id="查看项目多了一个-alternateLocation目录-并且依赖的jar包都下载到这个目录下了。"><a href="#查看项目多了一个-alternateLocation目录-并且依赖的jar包都下载到这个目录下了。" class="headerlink" title="查看项目多了一个/alternateLocation目录,并且依赖的jar包都下载到这个目录下了。"></a>查看项目多了一个<code>/alternateLocation</code>目录,并且依赖的jar包都下载到这个目录下了。</h3>  
 	</div>
 		<footer class="article-footer clearfix">
 <div class="article-catetags">
@@ -320,7 +320,7 @@ no code say nothing这时候你需要的是maven-dependency-plugin。
   <div id="toc" class="toc-aside">
   <strong class="toc-title">文章目录</strong>
  
- <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#copy-maven-dependencies-to-a-folder"><span class="toc-number">1.</span> <span class="toc-text">copy maven dependencies to a folder</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#background"><span class="toc-number">1.1.</span> <span class="toc-text">background</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#no-code-say-nothing"><span class="toc-number">1.2.</span> <span class="toc-text">no code say nothing</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#添加依赖配置"><span class="toc-number">1.2.1.</span> <span class="toc-text">添加依赖配置</span></a></li></ol></li></ol></li></ol>
+ <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#copy-maven-dependencies-to-a-folder"><span class="toc-number">1.</span> <span class="toc-text">copy maven dependencies to a folder</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#background"><span class="toc-number">1.1.</span> <span class="toc-text">background</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#no-code-say-nothing"><span class="toc-number">1.2.</span> <span class="toc-text">no code say nothing</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#添加依赖配置"><span class="toc-number">1.2.1.</span> <span class="toc-text">添加依赖配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#执行命令-mvn-dependency-copy-dependencies"><span class="toc-number">1.2.2.</span> <span class="toc-text">执行命令 mvn dependency:copy-dependencies</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#查看项目多了一个-alternateLocation目录-并且依赖的jar包都下载到这个目录下了。"><span class="toc-number">1.2.3.</span> <span class="toc-text">查看项目多了一个/alternateLocation目录,并且依赖的jar包都下载到这个目录下了。</span></a></li></ol></li></ol></li></ol>
  
   </div>
 
@@ -399,11 +399,11 @@ no code say nothing这时候你需要的是maven-dependency-plugin。
 			
 		
 			
-				<li><a href="/tags/版本管理/" title="版本管理">版本管理<sup>2</sup></a></li>
+				<li><a href="/tags/javascript/" title="javascript">javascript<sup>2</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/maven/" title="maven">maven<sup>2</sup></a></li>
+				<li><a href="/tags/版本管理/" title="版本管理">版本管理<sup>2</sup></a></li>
 			
 		
 			
@@ -411,7 +411,7 @@ no code say nothing这时候你需要的是maven-dependency-plugin。
 			
 		
 			
-				<li><a href="/tags/javascript/" title="javascript">javascript<sup>2</sup></a></li>
+				<li><a href="/tags/maven/" title="maven">maven<sup>2</sup></a></li>
 			
 		
 			
@@ -419,19 +419,7 @@ no code say nothing这时候你需要的是maven-dependency-plugin。
 			
 		
 			
-				<li><a href="/tags/java/" title="java">java<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/registry-ui/" title="registry-ui">registry-ui<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/nginx/" title="nginx">nginx<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/mongodb/" title="mongodb">mongodb<sup>1</sup></a></li>
+				<li><a href="/tags/异步/" title="异步">异步<sup>1</sup></a></li>
 			
 		
 			
@@ -439,7 +427,7 @@ no code say nothing这时候你需要的是maven-dependency-plugin。
 			
 		
 			
-				<li><a href="/tags/cygwin/" title="cygwin">cygwin<sup>1</sup></a></li>
+				<li><a href="/tags/oop/" title="oop">oop<sup>1</sup></a></li>
 			
 		
 			
@@ -447,27 +435,39 @@ no code say nothing这时候你需要的是maven-dependency-plugin。
 			
 		
 			
-				<li><a href="/tags/异步/" title="异步">异步<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/docker/" title="docker">docker<sup>1</sup></a></li>
 			
 		
 			
+				<li><a href="/tags/nginx/" title="nginx">nginx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/registry/" title="registry">registry<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/cygwin/" title="cygwin">cygwin<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/registry-ui/" title="registry-ui">registry-ui<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/java/" title="java">java<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/文章/" title="文章">文章<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/jdk/" title="jdk">jdk<sup>1</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/持续集成/" title="持续集成">持续集成<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/oop/" title="oop">oop<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/photo/" title="photo">photo<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/sublime/" title="sublime">sublime<sup>1</sup></a></li>
 			
 		
 		</ul>
