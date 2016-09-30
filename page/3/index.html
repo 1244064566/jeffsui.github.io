@@ -233,6 +233,88 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/04/23/javascript-oop-15-min-programming/" title="javascript oop 15 min programming" itemprop="url">javascript oop 15 min programming</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Jeff Sui" target="_blank" itemprop="author">Jeff Sui</a>
+		
+  <p class="article-time">
+    <time datetime="2015-04-23T05:13:30.000Z" itemprop="datePublished"> 发表于 2015-04-23</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <h1 id="javascript的面向对象15分钟教程"><a href="#javascript的面向对象15分钟教程" class="headerlink" title="javascript的面向对象15分钟教程"></a>javascript的面向对象15分钟教程</h1><h2 id="第一种面向对象的写法"><a href="#第一种面向对象的写法" class="headerlink" title="第一种面向对象的写法"></a>第一种面向对象的写法</h2><h2 id="创建空对象"><a href="#创建空对象" class="headerlink" title="创建空对象"></a>创建空对象</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">var bill =&#123;&#125;;//创建一个空对象</div></pre></td></tr></table></figure>
+<h2 id="给对象添加属性和方法"><a href="#给对象添加属性和方法" class="headerlink" title="给对象添加属性和方法"></a>给对象添加属性和方法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">bill.name = &quot;Bill Goat&quot;;</div><div class="line">bill.work = function ()&#123;</div><div class="line">    console.log(&quot;programming....&quot;);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h2 id="一步完成上面的两件事"><a href="#一步完成上面的两件事" class="headerlink" title="一步完成上面的两件事"></a>一步完成上面的两件事</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">var bill =&#123;</div><div class="line">    name : &quot;Bill Goat&quot;;</div><div class="line">    work : function()&#123;</div><div class="line">    console.log(&quot;programming....&quot;);</div><div class="line">&#125;</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h2 id="访问对象和属性"><a href="#访问对象和属性" class="headerlink" title="访问对象和属性"></a>访问对象和属性</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">console.log(bill.name);</div><div class="line">bill.work();</div></pre></td></tr></table></figure>
+<h2 id="方法重写"><a href="#方法重写" class="headerlink" title="方法重写"></a>方法重写</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">bill.name = &quot;Bill Goat&quot;;</div><div class="line">bill.work =function(who)&#123;</div><div class="line">     console.log(&quot;programming for &quot;+who);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h2 id="通过this关键字访问内部属性"><a href="#通过this关键字访问内部属性" class="headerlink" title="通过this关键字访问内部属性"></a>通过this关键字访问内部属性</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">bill.say = function ()&#123;</div><div class="line">    console.log(&quot;bill&apos;s name  is&quot;+this.name);</div><div class="line">&#125;;</div></pre></td></tr></table></figure>
+<h2 id="对象引用"><a href="#对象引用" class="headerlink" title="对象引用"></a>对象引用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">var silly = bill;</div><div class="line">console.log(silly.name);</div><div class="line">sally.name = &quot;Silly&quot;;</div><div class="line">console.log(silly.name);</div><div class="line">console.log(bill.name);</div></pre></td></tr></table></figure>
+<h2 id="另一个方式引用"><a href="#另一个方式引用" class="headerlink" title="另一个方式引用"></a>另一个方式引用</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">bill.name = &quot;Bill Goat&quot;;</div><div class="line">bill.say();</div><div class="line"></div><div class="line">var sayName = bill.say();</div><div class="line">sayName;</div><div class="line">sayName();</div></pre></td></tr></table></figure>
+<h2 id="有意思的地方-：全局属性"><a href="#有意思的地方-：全局属性" class="headerlink" title="有意思的地方 ：全局属性"></a>有意思的地方 ：全局属性</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">var name = &quot;Global&quot;;</div><div class="line">bill.say();</div></pre></td></tr></table></figure>
+<p>发现此时输出的是<br><code>bill&#39;s name is Global</code></p>
+<h2 id="另一种面向对象的写法"><a href="#另一种面向对象的写法" class="headerlink" title="另一种面向对象的写法"></a>另一种面向对象的写法</h2><h2 id="定义对象及属性"><a href="#定义对象及属性" class="headerlink" title="定义对象及属性"></a>定义对象及属性</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">function Game()&#123;&#125;;</div></pre></td></tr></table></figure>
+<h2 id="创建对象"><a href="#创建对象" class="headerlink" title="创建对象"></a>创建对象</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">var DF = new Game();</div></pre></td></tr></table></figure>
+<h2 id="对象属性"><a href="#对象属性" class="headerlink" title="对象属性"></a>对象属性</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">DF.title = &quot;星际争霸2&quot;;</div></pre></td></tr></table></figure>
+<h2 id="构造方法"><a href="#构造方法" class="headerlink" title="构造方法"></a>构造方法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">function Game (title)&#123;</div><div class="line">	this.title = typeof title !== &apos;undifined&apos; ? title :&quot;&quot;;</div><div class="line">&#125;;</div><div class="line"></div><div class="line">var d3 = new Game(&quot;d3&quot;);</div><div class="line">d3.title;</div><div class="line">d3.title =&quot;starcraft2&quot;;</div></pre></td></tr></table></figure>
+<p><code>this.title = typeof title !== &#39;undifined&#39; ? title :&quot;&quot;;</code>相当于</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">if(typeof title !== &quot;undifined&quot;）&#123;</div><div class="line">	this.title = title;</div><div class="line">&#125;else&#123;</div><div class="line">	this.title = &quot;&quot;;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="创建一个方法来访问这个属性"><a href="#创建一个方法来访问这个属性" class="headerlink" title="创建一个方法来访问这个属性"></a>创建一个方法来访问这个属性</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">d3.loveTitle = function ()&#123;</div><div class="line">	console.log(&quot;I love &quot;+this.title);</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h2 id="更好的写法"><a href="#更好的写法" class="headerlink" title="更好的写法"></a>更好的写法</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"></div><div class="line">Game.prototype.heartIt = function ()&#123;</div><div class="line">	console.log(&quot;I love &quot;+this.title);</div><div class="line">&#125;</div><div class="line">d3.heartIt();</div></pre></td></tr></table></figure>
+<p>下次详解javascript的原生对象模型</p>
+<p>to be continued~~~~</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+<div class="article-categories">
+  <span></span>
+  <a class="article-category-link" href="/categories/javascript/">javascript</a>
+</div>
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/javascript/">javascript</a><a href="/tags/oop/">oop</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+	  	<span></span>
+		<a href="/2015/04/23/javascript-oop-15-min-programming/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/23/javascript-oop-15-min-programming/" data-count-type="comments">&nbsp;</a>
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/04/22/talk-about-software-engineering/" title="talk about software engineering" itemprop="url">talk about software engineering</a>
   </h1>
   <p class="article-author">By
@@ -518,130 +600,6 @@
 
 
 
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/04/17/push-hexo-to-github/" title="push-hexo-to-github" itemprop="url">push-hexo-to-github</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Jeff Sui" target="_blank" itemprop="author">Jeff Sui</a>
-		
-  <p class="article-time">
-    <time datetime="2015-04-17T08:35:31.000Z" itemprop="datePublished"> 发表于 2015-04-17</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>#如何使用hexo在github上建立静态博客</p>
-<p>##环境搭建</p>
-<ol>
-<li><p>hexo环境搭建</p>
-<p> 请参考 hexo.io <a href="http://hexo.io/" title="官方站点" target="_blank" rel="external">官方站点</a>,<br> <strong>强烈建议</strong>给<em>基本操作</em>下的内容快速浏览一遍,下面的操作是我一个一个命令敲出来的,遇到的坑也会记录下来,希望大家能少走弯路。</p>
-</li>
-<li><p>github上建立静态博客</p>
-<ol>
-<li>github账号申请（略）</li>
-<li>建立一个github项目</li>
-<li><code>git clone 项目地址</code> 到本地</li>
-<li>项目初始化<br><code><pre><br>cd 项目名<br>echo # hexo 实例站点 &gt;&gt; README.md<br>git init<br>git add README.md<br>git commit -m “first blood”<br>git remote add origin 项目地址<br>git push -u origin master<br></pre></code></li>
-<li><p>github免费站点建立规则,请仔细阅读这个规则<br><a href="https://help.github.com/articles/user-organization-and-project-pages/" target="_blank" rel="external">https://help.github.com/articles/user-organization-and-project-pages/</a></p>
-</li>
-<li><p>默认github域名</p>
-<p>默认github 分配了 一个name.github.io的域名,<br>还有一个name.github.io/project_name的二级域名,<br>请参照github的提示设置URL。</p>
-</li>
-</ol>
-</li>
-</ol>
-<h2 id="华丽的分割线"><a href="#华丽的分割线" class="headerlink" title="华丽的分割线"></a>华丽的分割线</h2><ol>
-<li><p>站点配置流程</p>
-<ol>
-<li>建立站点文件夹,并站点初始化</li>
-<li>安装hexo依赖</li>
-<li>修改node_module/hexo-server/index.js,用于本地调试</li>
-<li>安装hexo-git-deployer插件</li>
-<li><p>修改全局配置文件_config.yml,配置<code>deploy</code><br><code><pre><br># Site 站点配置<br>title: 凭海临风的测试江湖<br>subtitle:<br>description: 凭海临风的博客<br>author: Jeff Sui<br>language: zh-CN<br>timezone<br></pre></code></p>
-<p><code><pre><br># URL 站点链接<br>## If your site is put in a subdirectory, set url as ‘<a href="http://yoursite.com/child" target="_blank" rel="external">http://yoursite.com/child</a>‘ and root as ‘/child/‘<br>url: <a href="http://jeffsui.github.io">http://jeffsui.github.io</a><br>root: /pinghailinfeng_blog/<br>permalink: :year/:month/:day/:title/<br>permalink_defaults:<br></pre></code></p>
-<p><code><pre><br># Deployment<br>## Docs: <a href="http://hexo.io/docs/deployment.html" target="_blank" rel="external">http://hexo.io/docs/deployment.html</a><br>deploy:<br>type: git<br>repo: <a href="https://github.com/jeffsui/pinghailinfeng_blog.git" target="_blank" rel="external">https://github.com/jeffsui/pinghailinfeng_blog.git</a><br>branch : master<br>message :<br></pre></code></p>
-<p><em>以上配置仅供参考</em></p>
-</li>
-</ol>
-</li>
-<li><p>创建文章</p>
-<ul>
-<li><p>执行<code>hexo new</code> 命令</p>
-<p>例如:hexo new post my-first-blog</p>
-<p><em>将会自动在source/_posts下创建一个my-first-blog.md的文件,使用的是scaffolds下的post.md模板</em></p>
-</li>
-<li><p>修改并保存my-first-blog.md文件</p>
-</li>
-<li><p>站点生成<code>hexo g</code></p>
-</li>
-<li><p>站点部署 <code>hexo d</code></p>
-<p>如果没有报错,恭喜你已经成功推送到 项目的master分支。</p>
-</li>
-</ul>
-</li>
-<li><p>创建gh-pages分支并推送到远程<br> <code><pre><br> git fetch origin master<br> git checkout gh-pages<br> git merge master<br> git push origin gh-pages<br> </pre></code></p>
-</li>
-<li>访问<a href="http://jeffsui.github.io/pinghailinfeng_blog/" title="站点">http://jeffsui.github.io/pinghailinfeng_blog/</a></li>
-</ol>
-<p>##遇到的问题</p>
-<ol>
-<li>github站点的规则不熟悉,url配置浪费我2个小时。项目建立的是二级域名,所以必须要按照我说的那样配置。</li>
-<li>本地预览有可能不加载样式,重新删除<code>node_module</code>下所有,执行<code>npm install</code>,再<code>hexo g</code>,<code>hexo server -i 127.0.0.1 -s -o</code>即可。</li>
-<li>hexo3.0版本的git插件必须要独立安装。</li>
-<li>其他坑,自己填吧。</li>
-</ol>
-<p>##总结</p>
-<p><em>大坑各种有,github特别多,还有伟大的墙,兄弟们,github好上,填坑需谨慎！</em></p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-<div class="article-categories">
-  <span></span>
-  <a class="article-category-link" href="/categories/hexo/">hexo</a>
-</div>
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/hexo/">hexo</a><a href="/tags/搭建/">搭建</a><a href="/tags/笔记/">笔记</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
-	
-	  	<span></span>
-		<a href="/2015/04/17/push-hexo-to-github/#comments" class="ds-thread-count comments-count-link" data-thread-key="2015/04/17/push-hexo-to-github/" data-count-type="comments">&nbsp;</a>
-	
-</div>
-
-</footer>
-
-
-    </article>
-
-
-
-
-
-
 
   <nav id="page-nav" class="clearfix">
     <a class="extend prev" rel="prev" href="/page/2/"><span></span>Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next<span></span></a>
@@ -677,6 +635,10 @@
 		
 		  
 			<li><a href="/categories/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+		  
+		
+		  
+			<li><a href="/categories/java/" title="java">java<sup>1</sup></a></li>
 		  
 		
 		  
@@ -725,6 +687,10 @@
 			
 		
 			
+				<li><a href="/tags/maven/" title="maven">maven<sup>2</sup></a></li>
+			
+		
+			
 				<li><a href="/tags/windows/" title="windows">windows<sup>2</sup></a></li>
 			
 		
@@ -734,6 +700,22 @@
 		
 			
 				<li><a href="/tags/博客/" title="博客">博客<sup>2</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/java/" title="java">java<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/registry-ui/" title="registry-ui">registry-ui<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/nginx/" title="nginx">nginx<sup>1</sup></a></li>
+			
+		
+			
+				<li><a href="/tags/mongodb/" title="mongodb">mongodb<sup>1</sup></a></li>
 			
 		
 			
@@ -757,11 +739,7 @@
 			
 		
 			
-				<li><a href="/tags/registry/" title="registry">registry<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/registry-ui/" title="registry-ui">registry-ui<sup>1</sup></a></li>
+				<li><a href="/tags/持续集成/" title="持续集成">持续集成<sup>1</sup></a></li>
 			
 		
 			
@@ -769,27 +747,11 @@
 			
 		
 			
-				<li><a href="/tags/jdk/" title="jdk">jdk<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/mongodb/" title="mongodb">mongodb<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/持续集成/" title="持续集成">持续集成<sup>1</sup></a></li>
-			
-		
-			
 				<li><a href="/tags/photo/" title="photo">photo<sup>1</sup></a></li>
 			
 		
 			
-				<li><a href="/tags/软件工程/" title="软件工程">软件工程<sup>1</sup></a></li>
-			
-		
-			
-				<li><a href="/tags/hexo/" title="hexo">hexo<sup>1</sup></a></li>
+				<li><a href="/tags/sublime/" title="sublime">sublime<sup>1</sup></a></li>
 			
 		
 		</ul>

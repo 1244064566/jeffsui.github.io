@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://jeffsui.github.io/2016/09/30/copy-maven-dependencies-to-a-folder/</loc>
+    
+    <lastmod>2016-09-30T05:14:58.822Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://jeffsui.github.io/2015/04/23/javascript-oop-15-min-programming/</loc>
+    
+    <lastmod>2016-09-29T05:17:38.395Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://jeffsui.github.io/2016/09/27/how-to-use-nginx-on-windows/</loc>
     
     <lastmod>2016-09-27T03:07:53.819Z</lastmod>
@@ -257,13 +271,6 @@
     <loc>http://jeffsui.github.io/2016/02/13/maven3-jdk1-7-problem-fixed/</loc>
     
     <lastmod>2016-09-20T06:17:25.013Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://jeffsui.github.io/2015/04/23/javascript-oop-15-min-programming/</loc>
-    
-    <lastmod>2016-09-20T06:17:25.009Z</lastmod>
     
   </url>
   
